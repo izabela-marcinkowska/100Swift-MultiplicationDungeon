@@ -14,6 +14,14 @@ struct ContentView: View {
     @State private var questions = [Int]()
     var body: some View {
         VStack {
+            Form {
+                Picker("Amount questions", selection: $wishedAmountQuestions) {
+                    ForEach(1..<20, id: \.self) { num in
+                        Text("\(num) questions").tag(num)
+                    }
+                }
+            }
+            
             Button ("Click here") {
                 createQuestions(AmountQuestions: wishedAmountQuestions, level: wishedLevel)
             }
@@ -23,8 +31,6 @@ struct ContentView: View {
                         Text("Dynamic row \($0)")
                     }
                 }
-                
-                
             }
         }
     }
