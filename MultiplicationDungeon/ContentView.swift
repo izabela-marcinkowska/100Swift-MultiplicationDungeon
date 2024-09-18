@@ -11,8 +11,9 @@ import SwiftUI
 struct ContentView: View {
     @State private var wishedAmountQuestions = 5
     @State private var wishedLevel = 5
-    @State private var questions = [String]()
+    @State private var questions = [Question]()
     @State private var currentQuestion = 0
+    @State private var answer = 0
     var body: some View {
         VStack {
             Form {
@@ -22,6 +23,10 @@ struct ContentView: View {
                     }
                 }
                 Stepper("Table up to \(wishedLevel)", value: $wishedLevel, in: 2...12)
+                TextField("Answer", value: $answer, format: .number)
+                Button("Submit answer") {
+                    
+                }
             }
             
             Text(questions.isEmpty ? "Question" : "\(questions[currentQuestion])")
@@ -30,27 +35,36 @@ struct ContentView: View {
             }
             
             Button ("Click here") {
-                createQuestions(AmountQuestions: wishedAmountQuestions, level: wishedLevel)
+                for _ in 0...wishedAmountQuestions {
+                    questions.append(Question(level: wishedAmountQuestions))
+                    
+                }
             }
             
         }
     }
+   
     
-    func createQuestions (AmountQuestions: Int, level: Int) -> Void {
-        questions = []
-        for _ in 0...AmountQuestions {
-            let firstNumber = Int.random(in: 1...wishedLevel)
-            let secondNumber = Int.random(in: 1...wishedLevel)
-            
-            let question = "\(firstNumber) * \(secondNumber)"
-            let answer = firstNumber * secondNumber
-            
-            print(firstNumber, secondNumber, answer)
-            questions.append(question)
+    struct Question {
+        let firstNumber: Int
+        let secondNumber: Int
+        let questionText: String
+        let correctAnswer: Int
+
+        init(level: Int) {
+            self.firstNumber = Int.random(in: 1...level)
+            self.secondNumber = Int.random(in: 1...level)
+            self.questionText = "\(firstNumber) * \(secondNumber)"
+            self.correctAnswer = firstNumber * secondNumber
         }
-        questions.forEach { question in
-                print(question)
+        
+        func checkAnswer (answer: Int) {
+            if (answer == correctAnswer) {
+                print("It's correct")
+            } else {
+                print("it's not correct")
             }
+        }
     }
     
     
