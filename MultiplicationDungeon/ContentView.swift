@@ -15,6 +15,7 @@ struct ContentView: View {
     @State private var currentQuestion = 0
     @State private var answer = 0
     @State private var amountPoints = 0
+    @State private var endOfGame = false
     var body: some View {
         VStack {
             Form {
@@ -34,17 +35,33 @@ struct ContentView: View {
                         print("It's wrong")
                     }
                     print("Amount points is \(amountPoints)")
+                    if (currentQuestion < wishedAmountQuestions - 1) {
+                        currentQuestion += 1
+                        print("current is \(currentQuestion), and count is \(questions.count)")
+                    } else {
+                        endOfGame = true
+                    }
                     
                 }
             }
+            
+            
         
             Button ("Start Game") {
-                for _ in 0...wishedAmountQuestions {
+                questions = []
+                amountPoints = 0
+                currentQuestion = 0
+                endOfGame = false
+                answer = 0 // Reset the answer field
+                for _ in 0..<wishedAmountQuestions {
                     questions.append(Question(level: wishedAmountQuestions))
                     
                 }
             }
             
+        }.alert("Game is end", isPresented: $endOfGame) {
+            Button("ok") {
+            }
         }
     }
    
