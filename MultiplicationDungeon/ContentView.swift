@@ -14,6 +14,7 @@ struct ContentView: View {
     @State private var questions = [Question]()
     @State private var currentQuestion = 0
     @State private var answer = 0
+    @State private var amountPoints = 0
     var body: some View {
         VStack {
             Form {
@@ -26,16 +27,18 @@ struct ContentView: View {
                 Text(questions.isEmpty ? "Question" : "\(questions[currentQuestion].questionText)")
                 TextField("Answer", value: $answer, format: .number)
                 Button("Submit answer") {
-                    questions[currentQuestion].checkAnswer(answer: answer)
+                    if (questions[currentQuestion].checkAnswer(answer: answer)) {
+                        amountPoints += 1
+                        print("It's correct")
+                    } else {
+                        print("It's wrong")
+                    }
+                    print("Amount points is \(amountPoints)")
+                    
                 }
             }
-            
-            
-            Button ("Next Question") {
-                currentQuestion += 1
-            }
-            
-            Button ("Create questions") {
+        
+            Button ("Start Game") {
                 for _ in 0...wishedAmountQuestions {
                     questions.append(Question(level: wishedAmountQuestions))
                     
@@ -59,13 +62,9 @@ struct ContentView: View {
             self.correctAnswer = firstNumber * secondNumber
         }
         
-        func checkAnswer (answer: Int) {
-            if (answer == correctAnswer) {
-                print("It's correct")
-            } else {
-                print("it's not correct")
+        func checkAnswer(answer: Int) -> Bool {
+                return answer == correctAnswer
             }
-        }
     }
     
     
