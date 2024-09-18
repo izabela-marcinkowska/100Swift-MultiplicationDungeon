@@ -23,18 +23,19 @@ struct ContentView: View {
                     }
                 }
                 Stepper("Table up to \(wishedLevel)", value: $wishedLevel, in: 2...12)
+                Text(questions.isEmpty ? "Question" : "\(questions[currentQuestion].questionText)")
                 TextField("Answer", value: $answer, format: .number)
                 Button("Submit answer") {
-                    
+                    questions[currentQuestion].checkAnswer(answer: answer)
                 }
             }
             
-            Text(questions.isEmpty ? "Question" : "\(questions[currentQuestion])")
+            
             Button ("Next Question") {
                 currentQuestion += 1
             }
             
-            Button ("Click here") {
+            Button ("Create questions") {
                 for _ in 0...wishedAmountQuestions {
                     questions.append(Question(level: wishedAmountQuestions))
                     
