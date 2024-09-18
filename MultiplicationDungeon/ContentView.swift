@@ -9,9 +9,10 @@ import SwiftUI
 
 
 struct ContentView: View {
-    @State private var wishedAmountQuestions = 10
+    @State private var wishedAmountQuestions = 5
     @State private var wishedLevel = 5
-    @State private var questions = [Int]()
+    @State private var questions = [String]()
+    @State private var currentQuestion = 0
     var body: some View {
         VStack {
             Form {
@@ -23,28 +24,36 @@ struct ContentView: View {
                 Stepper("Table up to \(wishedLevel)", value: $wishedLevel, in: 2...12)
             }
             
+            Text(questions.isEmpty ? "Question" : "\(questions[currentQuestion])")
+            Button ("Next Question") {
+                currentQuestion += 1
+            }
+            
             Button ("Click here") {
                 createQuestions(AmountQuestions: wishedAmountQuestions, level: wishedLevel)
             }
-            List {
-                Section("Section 2") {
-                    ForEach(questions, id: \.self) {
-                        Text("Dynamic row \($0)")
-                    }
-                }
-            }
+            
         }
     }
     
     func createQuestions (AmountQuestions: Int, level: Int) -> Void {
-        for _ in 1...AmountQuestions {
+        questions = []
+        for _ in 0...AmountQuestions {
             let firstNumber = Int.random(in: 1...wishedLevel)
             let secondNumber = Int.random(in: 1...wishedLevel)
-            let result = firstNumber * secondNumber
-            print(firstNumber, secondNumber, result)
-            questions.append(result)
+            
+            let question = "\(firstNumber) * \(secondNumber)"
+            let answer = firstNumber * secondNumber
+            
+            print(firstNumber, secondNumber, answer)
+            questions.append(question)
         }
+        questions.forEach { question in
+                print(question)
+            }
     }
+    
+    
 }
 
 
