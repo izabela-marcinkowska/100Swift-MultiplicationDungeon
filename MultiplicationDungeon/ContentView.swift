@@ -20,6 +20,7 @@ struct ContentView: View {
                         Text("\(num) questions").tag(num)
                     }
                 }
+                Stepper("Table up to \(wishedLevel)", value: $wishedLevel, in: 2...12)
             }
             
             Button ("Click here") {
