@@ -13,7 +13,7 @@ struct ContentView: View {
     @State private var isGameActive = false
     @State private var finalScore = 0
     @State private var showAlert = false
-
+    
     var body: some View {
         VStack {
             Form {
@@ -23,9 +23,13 @@ struct ContentView: View {
                     }
                 }
                 Stepper("Table up to \(wishedLevel)", value: $wishedLevel, in: 2...12)
-                Button("Start Game") {
-                    isGameActive = true
-                }
+            }
+        }
+        VStack {
+            Button() {
+                isGameActive = true
+            } label: {
+                Image("start-game").resizable().frame(width: 300, height: 300)
             }
         }
         .sheet(isPresented: $isGameActive) {
@@ -68,7 +72,7 @@ struct GameView: View {
                 NumberPicture(picture: questions.isEmpty ? 1 : questions[currentQuestion].secondNumber)
             }
 
-            Text("My answer is ...")
+            Text("My answer is...")
                 .padding()
                 .font(.custom(
                         "Chalkduster",
@@ -148,6 +152,12 @@ struct GameView: View {
                 .frame(width: 100.0, height: 150.0)
                 .shadow(radius: 5)
         }
+    }
+}
+
+struct AmountOfQuestions: View {
+    var body: some View {
+        
     }
 }
 
