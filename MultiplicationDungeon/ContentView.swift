@@ -282,7 +282,91 @@ struct LevelSelection: View {
     }
 
     var body: some View {
-        Text("This will be amount level window")
+        Text("Table I want to answer is up to:")
+            .padding()
+            .multilineTextAlignment(.center)
+            .font(.custom(
+                    "Chalkduster",
+                    fixedSize: 32))
+        HStack{
+            Button () {
+                print("Button '1' tapped in AmountOfQuestions")
+                onSetLevel(1)
+                dismiss()
+            } label: {
+                NumberPicture(picture: 1)
+            }
+            Button () {
+                print("Button '2' tapped in AmountOfQuestions")
+                onSetLevel(2)
+                dismiss()
+            } label: {
+                NumberPicture(picture: 2)
+            }
+            Button () {
+                print("Button '3' tapped in AmountOfQuestions")
+                onSetLevel(3)
+                dismiss()
+            } label: {
+                NumberPicture(picture: 3)
+            }
+        }
+        HStack{
+            Button () {
+                print("Button '4' tapped in AmountOfQuestions")
+                onSetLevel(4)
+                dismiss()
+            } label: {
+                NumberPicture(picture: 4)
+            }
+            Button () {
+                print("Button '5' tapped in AmountOfQuestions")
+                onSetLevel(5)
+                dismiss()
+            } label: {
+                NumberPicture(picture: 5)
+            }
+            Button () {
+                print("Button '6' tapped in AmountOfQuestions")
+                onSetLevel(6)
+                dismiss()
+            } label: {
+                NumberPicture(picture: 6)
+            }
+        }
+        HStack{
+            Button () {
+                print("Button '7' tapped in AmountOfQuestions")
+                onSetLevel(7)
+                dismiss()
+            } label: {
+                NumberPicture(picture: 7)
+            }
+            Button () {
+                print("Button '8' tapped in AmountOfQuestions")
+                onSetLevel(8)
+                dismiss()
+            } label: {
+                NumberPicture(picture: 8)
+            }
+            Button () {
+                print("Button '9' tapped in AmountOfQuestions")
+                onSetLevel(9)
+                dismiss()
+            } label: {
+                NumberPicture(picture: 9)
+            }
+        }
+    }
+    
+    struct NumberPicture: View {
+        var picture: Int
+        var body: some View {
+            Image("\(picture)")
+                .resizable()
+                .frame(width: 100.0, height: 150.0)
+                .shadow(radius: 5)
+        }
     }
 }
 
