@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
     @State private var wishedAmountQuestions = 5
-    @State private var wishedLevel = 5
+    @State private var wishedLevel = 7
     @State private var isGameActive = false
     @State private var finalScore = 0
     @State private var showAlert = false
@@ -21,8 +21,10 @@ struct ContentView: View {
             HStack (spacing: 70){
                 VStack{
                     Text("Questions")
-                    Button ("\(wishedAmountQuestions)") {
+                    Button () {
                         setAmountOfQuestions = true
+                    } label: {
+                        NumberPicture(picture: wishedAmountQuestions)
                     }.sheet(isPresented: $setAmountOfQuestions) {
                         AmountOfQuestions { selectedAmount in
                             wishedAmountQuestions = selectedAmount // Update state variable
@@ -34,8 +36,10 @@ struct ContentView: View {
                 }
                 VStack{
                     Text("Level")
-                    Button("\(wishedLevel)") {
+                    Button() {
                         setLevelSelection = true
+                    } label: {
+                        NumberPicture(picture: wishedLevel)
                     }
                     .sheet(isPresented: $setLevelSelection) {
                         LevelSelection { selectedLevel in
@@ -65,6 +69,15 @@ struct ContentView: View {
         }
         .alert("Game Over! Your score is \(finalScore)", isPresented: $showAlert) {
             Button("OK", role: .cancel) {}
+        }
+    }
+    struct NumberPicture: View {
+        var picture: Int
+        var body: some View {
+            Image("\(picture)")
+                .resizable()
+                .frame(width: 100.0, height: 150.0)
+                .shadow(radius: 5)
         }
     }
 }
