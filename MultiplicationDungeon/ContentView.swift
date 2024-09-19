@@ -18,32 +18,39 @@ struct ContentView: View {
     
     var body: some View {
         VStack (spacing: 100) {
-            HStack{
-                
-            Button ("Questions") {
-                setAmountOfQuestions = true
-            }.sheet(isPresented: $setAmountOfQuestions) {
-                AmountOfQuestions { selectedAmount in
-                    wishedAmountQuestions = selectedAmount // Update state variable
-                    // The sheet is already dismissed inside AmountOfQuestions
+            HStack (spacing: 70){
+                VStack{
+                    Text("Questions")
+                    Button ("\(wishedAmountQuestions)") {
+                        setAmountOfQuestions = true
+                    }.sheet(isPresented: $setAmountOfQuestions) {
+                        AmountOfQuestions { selectedAmount in
+                            wishedAmountQuestions = selectedAmount // Update state variable
+                            // The sheet is already dismissed inside AmountOfQuestions
+                            print("Selected amount in ContentView: \(selectedAmount)")
+                            print("Updated wishedAmountQuestions to \(wishedAmountQuestions)")
+                        }
+                    }
+                }
+                VStack{
+                    Text("Level")
+                    Button("\(wishedLevel)") {
+                        setLevelSelection = true
+                    }
+                    .sheet(isPresented: $setLevelSelection) {
+                        LevelSelection { selectedLevel in
+                            wishedLevel = selectedLevel
+                        }
+                    }
                 }
             }
-            Button("Level") {
-                setLevelSelection = true
-            }
-            .sheet(isPresented: $setLevelSelection) {
-                LevelSelection { selectedLevel in
-                    wishedLevel = selectedLevel
+            VStack {
+                Button() {
+                    isGameActive = true
+                } label: {
+                    Image("start-game").resizable().frame(width: 300, height: 300)
                 }
             }
-            }
-        VStack {
-            Button() {
-                isGameActive = true
-            } label: {
-                Image("start-game").resizable().frame(width: 300, height: 300)
-            }
-        }
         }
         .sheet(isPresented: $isGameActive) {
             GameView(
@@ -66,14 +73,14 @@ struct GameView: View {
     let wishedAmountQuestions: Int
     let wishedLevel: Int
     let onGameEnd: (Int) -> Void
-
+    
     @State private var currentQuestion = 0
     @State private var answerText = ""
     @State private var amountPoints = 0
     @State private var questions = [Question]()
     @State private var isAnswerCorrect = true
     @State private var showAnswerAlert = false
-
+    
     var body: some View {
         VStack {
             Spacer()
@@ -177,7 +184,91 @@ struct AmountOfQuestions: View {
             self.onSetAmount = onSetAmount
         }
     var body: some View {
-        Text("This will be amount question window")
+        Text("Amount questions I want to answer is:")
+            .padding()
+            .multilineTextAlignment(.center)
+            .font(.custom(
+                    "Chalkduster",
+                    fixedSize: 32))
+        HStack{
+            Button () {
+                print("Button '1' tapped in AmountOfQuestions")
+                onSetAmount(1)
+                dismiss()
+            } label: {
+                NumberPicture(picture: 1)
+            }
+            Button () {
+                print("Button '2' tapped in AmountOfQuestions")
+                onSetAmount(2)
+                dismiss()
+            } label: {
+                NumberPicture(picture: 2)
+            }
+            Button () {
+                print("Button '3' tapped in AmountOfQuestions")
+                onSetAmount(3)
+                dismiss()
+            } label: {
+                NumberPicture(picture: 3)
+            }
+        }
+        HStack{
+            Button () {
+                print("Button '4' tapped in AmountOfQuestions")
+                onSetAmount(4)
+                dismiss()
+            } label: {
+                NumberPicture(picture: 4)
+            }
+            Button () {
+                print("Button '5' tapped in AmountOfQuestions")
+                onSetAmount(5)
+                dismiss()
+            } label: {
+                NumberPicture(picture: 5)
+            }
+            Button () {
+                print("Button '6' tapped in AmountOfQuestions")
+                onSetAmount(6)
+                dismiss()
+            } label: {
+                NumberPicture(picture: 6)
+            }
+        }
+        HStack{
+            Button () {
+                print("Button '7' tapped in AmountOfQuestions")
+                onSetAmount(7)
+                dismiss()
+            } label: {
+                NumberPicture(picture: 7)
+            }
+            Button () {
+                print("Button '8' tapped in AmountOfQuestions")
+                onSetAmount(8)
+                dismiss()
+            } label: {
+                NumberPicture(picture: 8)
+            }
+            Button () {
+                print("Button '9' tapped in AmountOfQuestions")
+                onSetAmount(9)
+                dismiss()
+            } label: {
+                NumberPicture(picture: 9)
+            }
+        }
+    }
+    
+    struct NumberPicture: View {
+        var picture: Int
+        var body: some View {
+            Image("\(picture)")
+                .resizable()
+                .frame(width: 100.0, height: 150.0)
+                .shadow(radius: 5)
+        }
     }
 }
 
