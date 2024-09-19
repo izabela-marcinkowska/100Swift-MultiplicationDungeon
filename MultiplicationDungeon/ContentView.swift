@@ -17,10 +17,15 @@ struct ContentView: View {
     @State private var setLevelSelection = false
     
     var body: some View {
-        VStack (spacing: 100) {
-            HStack (spacing: 70){
+        VStack (spacing: 120) {
+            HStack{
                 VStack{
                     Text("Questions")
+                        .padding()
+                        .multilineTextAlignment(.center)
+                        .font(.custom(
+                            "Chalkduster",
+                            fixedSize: 28))
                     Button () {
                         setAmountOfQuestions = true
                     } label: {
@@ -33,9 +38,14 @@ struct ContentView: View {
                             print("Updated wishedAmountQuestions to \(wishedAmountQuestions)")
                         }
                     }
-                }
+                }.frame(width: 190, height: 190)
                 VStack{
                     Text("Level")
+                        .padding()
+                        .multilineTextAlignment(.center)
+                        .font(.custom(
+                            "Chalkduster",
+                            fixedSize: 28))
                     Button() {
                         setLevelSelection = true
                     } label: {
@@ -46,7 +56,7 @@ struct ContentView: View {
                             wishedLevel = selectedLevel
                         }
                     }
-                }
+                }.frame(width: 180, height: 180)
             }
             VStack {
                 Button() {
@@ -104,12 +114,12 @@ struct GameView: View {
                     .frame(width: 45, height: 40)
                 NumberPicture(picture: questions.isEmpty ? 1 : questions[currentQuestion].secondNumber)
             }
-
+            
             Text("My answer is...")
                 .padding()
                 .font(.custom(
-                        "Chalkduster",
-                        fixedSize: 36))
+                    "Chalkduster",
+                    fixedSize: 36))
             TextField("Answer", text: $answerText)
                 .multilineTextAlignment(.center)
                 .font(.largeTitle)
@@ -139,29 +149,29 @@ struct GameView: View {
             }
         }
     }
-
+    
     struct Question {
         let firstNumber: Int
         let secondNumber: Int
         let correctAnswer: Int
-
+        
         init(level: Int) {
             self.firstNumber = Int.random(in: 1...level)
             self.secondNumber = Int.random(in: 1...level)
             self.correctAnswer = firstNumber * secondNumber
         }
-
+        
         func checkAnswer(answer: Int) -> Bool {
             return answer == correctAnswer
         }
     }
-
+    
     func generateQuestions() {
         for _ in 0..<wishedAmountQuestions {
             questions.append(Question(level: wishedLevel))
         }
     }
-
+    
     func submitAnswer() {
         let userAnswer = Int(answerText) ?? 0
         if questions[currentQuestion].checkAnswer(answer: userAnswer) {
@@ -176,7 +186,7 @@ struct GameView: View {
         showAnswerAlert = true
         // Do not change `currentQuestion` or call `onGameEnd` here
     }
-
+    
     struct NumberPicture: View {
         var picture: Int
         var body: some View {
@@ -190,86 +200,90 @@ struct GameView: View {
 
 struct AmountOfQuestions: View {
     let onSetAmount: (Int) -> Void // Closure to pass back the selected amount
-
-        @Environment(\.dismiss) var dismiss // Environment variable to dismiss the sheet
-
-        init(onSetAmount: @escaping (Int) -> Void) {
-            self.onSetAmount = onSetAmount
-        }
+    
+    @Environment(\.dismiss) var dismiss // Environment variable to dismiss the sheet
+    
+    init(onSetAmount: @escaping (Int) -> Void) {
+        self.onSetAmount = onSetAmount
+    }
     var body: some View {
-        Text("Amount questions I want to answer is:")
-            .padding()
-            .multilineTextAlignment(.center)
-            .font(.custom(
+        VStack(spacing: 40){
+            
+            Text("Amount questions I want to answer is:")
+                .padding()
+                .multilineTextAlignment(.center)
+                .font(.custom(
                     "Chalkduster",
                     fixedSize: 32))
-        HStack{
-            Button () {
-                print("Button '1' tapped in AmountOfQuestions")
-                onSetAmount(1)
-                dismiss()
-            } label: {
-                NumberPicture(picture: 1)
+            
+            HStack(spacing: 40){
+                Button () {
+                    print("Button '1' tapped in AmountOfQuestions")
+                    onSetAmount(1)
+                    dismiss()
+                } label: {
+                    NumberPicture(picture: 1)
+                }
+                Button () {
+                    print("Button '2' tapped in AmountOfQuestions")
+                    onSetAmount(2)
+                    dismiss()
+                } label: {
+                    NumberPicture(picture: 2)
+                }
+                Button () {
+                    print("Button '3' tapped in AmountOfQuestions")
+                    onSetAmount(3)
+                    dismiss()
+                } label: {
+                    NumberPicture(picture: 3)
+                }
             }
-            Button () {
-                print("Button '2' tapped in AmountOfQuestions")
-                onSetAmount(2)
-                dismiss()
-            } label: {
-                NumberPicture(picture: 2)
+            HStack(spacing: 40){
+                Button () {
+                    print("Button '4' tapped in AmountOfQuestions")
+                    onSetAmount(4)
+                    dismiss()
+                } label: {
+                    NumberPicture(picture: 4)
+                }
+                Button () {
+                    print("Button '5' tapped in AmountOfQuestions")
+                    onSetAmount(5)
+                    dismiss()
+                } label: {
+                    NumberPicture(picture: 5)
+                }
+                Button () {
+                    print("Button '6' tapped in AmountOfQuestions")
+                    onSetAmount(6)
+                    dismiss()
+                } label: {
+                    NumberPicture(picture: 6)
+                }
             }
-            Button () {
-                print("Button '3' tapped in AmountOfQuestions")
-                onSetAmount(3)
-                dismiss()
-            } label: {
-                NumberPicture(picture: 3)
-            }
-        }
-        HStack{
-            Button () {
-                print("Button '4' tapped in AmountOfQuestions")
-                onSetAmount(4)
-                dismiss()
-            } label: {
-                NumberPicture(picture: 4)
-            }
-            Button () {
-                print("Button '5' tapped in AmountOfQuestions")
-                onSetAmount(5)
-                dismiss()
-            } label: {
-                NumberPicture(picture: 5)
-            }
-            Button () {
-                print("Button '6' tapped in AmountOfQuestions")
-                onSetAmount(6)
-                dismiss()
-            } label: {
-                NumberPicture(picture: 6)
-            }
-        }
-        HStack{
-            Button () {
-                print("Button '7' tapped in AmountOfQuestions")
-                onSetAmount(7)
-                dismiss()
-            } label: {
-                NumberPicture(picture: 7)
-            }
-            Button () {
-                print("Button '8' tapped in AmountOfQuestions")
-                onSetAmount(8)
-                dismiss()
-            } label: {
-                NumberPicture(picture: 8)
-            }
-            Button () {
-                print("Button '9' tapped in AmountOfQuestions")
-                onSetAmount(9)
-                dismiss()
-            } label: {
-                NumberPicture(picture: 9)
+            HStack(spacing: 40){
+                Button () {
+                    print("Button '7' tapped in AmountOfQuestions")
+                    onSetAmount(7)
+                    dismiss()
+                } label: {
+                    NumberPicture(picture: 7)
+                }
+                Button () {
+                    print("Button '8' tapped in AmountOfQuestions")
+                    onSetAmount(8)
+                    dismiss()
+                } label: {
+                    NumberPicture(picture: 8)
+                }
+                Button () {
+                    print("Button '9' tapped in AmountOfQuestions")
+                    onSetAmount(9)
+                    dismiss()
+                } label: {
+                    NumberPicture(picture: 9)
+                }
             }
         }
     }
@@ -287,87 +301,89 @@ struct AmountOfQuestions: View {
 
 struct LevelSelection: View {
     let onSetLevel: (Int) -> Void
-
+    
     @Environment(\.dismiss) var dismiss
-
+    
     init(onSetLevel: @escaping (Int) -> Void) {
         self.onSetLevel = onSetLevel
     }
-
+    
     var body: some View {
-        Text("Table I want to answer is up to:")
-            .padding()
-            .multilineTextAlignment(.center)
-            .font(.custom(
+        VStack(spacing: 40) {
+            Text("Table I want to answer is up to:")
+                .padding()
+                .multilineTextAlignment(.center)
+                .font(.custom(
                     "Chalkduster",
                     fixedSize: 32))
-        HStack{
-            Button () {
-                print("Button '1' tapped in AmountOfQuestions")
-                onSetLevel(1)
-                dismiss()
-            } label: {
-                NumberPicture(picture: 1)
+            HStack(spacing: 40){
+                Button () {
+                    print("Button '1' tapped in AmountOfQuestions")
+                    onSetLevel(1)
+                    dismiss()
+                } label: {
+                    NumberPicture(picture: 1)
+                }
+                Button () {
+                    print("Button '2' tapped in AmountOfQuestions")
+                    onSetLevel(2)
+                    dismiss()
+                } label: {
+                    NumberPicture(picture: 2)
+                }
+                Button () {
+                    print("Button '3' tapped in AmountOfQuestions")
+                    onSetLevel(3)
+                    dismiss()
+                } label: {
+                    NumberPicture(picture: 3)
+                }
             }
-            Button () {
-                print("Button '2' tapped in AmountOfQuestions")
-                onSetLevel(2)
-                dismiss()
-            } label: {
-                NumberPicture(picture: 2)
+            HStack(spacing: 40){
+                Button () {
+                    print("Button '4' tapped in AmountOfQuestions")
+                    onSetLevel(4)
+                    dismiss()
+                } label: {
+                    NumberPicture(picture: 4)
+                }
+                Button () {
+                    print("Button '5' tapped in AmountOfQuestions")
+                    onSetLevel(5)
+                    dismiss()
+                } label: {
+                    NumberPicture(picture: 5)
+                }
+                Button () {
+                    print("Button '6' tapped in AmountOfQuestions")
+                    onSetLevel(6)
+                    dismiss()
+                } label: {
+                    NumberPicture(picture: 6)
+                }
             }
-            Button () {
-                print("Button '3' tapped in AmountOfQuestions")
-                onSetLevel(3)
-                dismiss()
-            } label: {
-                NumberPicture(picture: 3)
-            }
-        }
-        HStack{
-            Button () {
-                print("Button '4' tapped in AmountOfQuestions")
-                onSetLevel(4)
-                dismiss()
-            } label: {
-                NumberPicture(picture: 4)
-            }
-            Button () {
-                print("Button '5' tapped in AmountOfQuestions")
-                onSetLevel(5)
-                dismiss()
-            } label: {
-                NumberPicture(picture: 5)
-            }
-            Button () {
-                print("Button '6' tapped in AmountOfQuestions")
-                onSetLevel(6)
-                dismiss()
-            } label: {
-                NumberPicture(picture: 6)
-            }
-        }
-        HStack{
-            Button () {
-                print("Button '7' tapped in AmountOfQuestions")
-                onSetLevel(7)
-                dismiss()
-            } label: {
-                NumberPicture(picture: 7)
-            }
-            Button () {
-                print("Button '8' tapped in AmountOfQuestions")
-                onSetLevel(8)
-                dismiss()
-            } label: {
-                NumberPicture(picture: 8)
-            }
-            Button () {
-                print("Button '9' tapped in AmountOfQuestions")
-                onSetLevel(9)
-                dismiss()
-            } label: {
-                NumberPicture(picture: 9)
+            HStack(spacing: 40){
+                Button () {
+                    print("Button '7' tapped in AmountOfQuestions")
+                    onSetLevel(7)
+                    dismiss()
+                } label: {
+                    NumberPicture(picture: 7)
+                }
+                Button () {
+                    print("Button '8' tapped in AmountOfQuestions")
+                    onSetLevel(8)
+                    dismiss()
+                } label: {
+                    NumberPicture(picture: 8)
+                }
+                Button () {
+                    print("Button '9' tapped in AmountOfQuestions")
+                    onSetLevel(9)
+                    dismiss()
+                } label: {
+                    NumberPicture(picture: 9)
+                }
             }
         }
     }
