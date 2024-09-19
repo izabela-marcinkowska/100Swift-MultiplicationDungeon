@@ -16,7 +16,7 @@ struct ContentView: View {
     @State private var showAlert = false
     
     
-
+    
     @State private var endOfGame = false
     var body: some View {
         VStack {
@@ -55,44 +55,47 @@ struct GameView: View {
     @State private var answer = 0
     @State private var amountPoints = 0
     @State private var questions = [Question]()
+    @FocusState private var answerIsFocused: Bool
     
     init(wishedAmountQuestions: Int, wishedLevel: Int, onGameEnd: @escaping (Int) -> Void) {
-            self.wishedAmountQuestions = wishedAmountQuestions
-            self.wishedLevel = wishedLevel
-            self.onGameEnd = onGameEnd
-        }
-   
+        self.wishedAmountQuestions = wishedAmountQuestions
+        self.wishedLevel = wishedLevel
+        self.onGameEnd = onGameEnd
+    }
+    
     
     var body: some View {
+        
         VStack{
-            Spacer()
-            Button("Submit answer") {
-                if (questions[currentQuestion].checkAnswer(answer: answer)) {
-                    amountPoints += 1
-                    print("It's correct")
-                } else {
-                    print("It's wrong")
-                }
-                print("Amount points is \(amountPoints)")
-                if (currentQuestion < wishedAmountQuestions - 1) {
-                    currentQuestion += 1
-                    print("current is \(currentQuestion), and count is \(questions.count)")
-                    print(String(questions[currentQuestion].firstNumber))
-                } else {
-                    onGameEnd(amountPoints)
-                    questions = []
-                }
-            }.onAppear{generateQuestions()}
-            Spacer()
             HStack {
                 NumberPicture(picture: questions.isEmpty ? 1 : questions[currentQuestion].firstNumber)
-                Image("11").resizable().frame(width: 55, height: 55)
+                Image("11").resizable().frame(width: 45, height: 40)
                 NumberPicture(picture: questions.isEmpty ? 1 : questions[currentQuestion].secondNumber)
             }
-
-            TextField("Answer", value: $answer, format: .number).multilineTextAlignment(.center).font(.title)
-            Spacer()
-            Spacer()
+            VStack{
+                Text("My answer is ...")
+                //                Image("13").resizable().frame(width: 400, height: 350)
+                //            }.frame(width: 200, height: 100)
+            }
+            HStack{
+                
+                TextField("Answer", value: $answer, format: .number)
+                    .multilineTextAlignment(.center)
+                    .font(.largeTitle)
+                    .keyboardType(.decimalPad)
+                    .focused($answerIsFocused)
+            }
+        }
+        .toolbar {
+            ToolbarItemGroup(placement: .keyboard) {
+                Spacer()
+                Button("Submit") {
+                    submitAnswer()
+                }
+            }
+        }.onAppear {
+            generateQuestions()
+            answerIsFocused = true
         }
     }
     
@@ -119,6 +122,29 @@ struct GameView: View {
     func generateQuestions() {
         for _ in 0..<wishedAmountQuestions {
             questions.append(Question(level: wishedLevel))
+        }
+    }
+    
+    func submitAnswer() {
+        if questions[currentQuestion].checkAnswer(answer: answer) {
+            amountPoints += 1
+            print("It's correct")
+        } else {
+            print("It's wrong")
+        }
+        print("Amount points is \(amountPoints)")
+        if currentQuestion < wishedAmountQuestions - 1 {
+            currentQuestion += 1
+            print("current is \(currentQuestion), and count is \(questions.count)")
+            print(String(questions[currentQuestion].firstNumber))
+            answer = 0 // Reset the answer field
+        } else {
+            onGameEnd(amountPoints)
+            questions = []
+        }
+        // Keep the keyboard up by setting focus back to the TextField
+        DispatchQueue.main.async {
+            answerIsFocused = true
         }
     }
     
