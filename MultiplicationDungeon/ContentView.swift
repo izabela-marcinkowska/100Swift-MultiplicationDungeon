@@ -61,11 +61,11 @@ struct GameView: View {
             self.wishedLevel = wishedLevel
             self.onGameEnd = onGameEnd
         }
+   
     
     var body: some View {
-        Form {
-            Text(questions.isEmpty ? "Question" : "\(questions[currentQuestion].questionText)")
-            TextField("Answer", value: $answer, format: .number)
+        VStack{
+            Spacer()
             Button("Submit answer") {
                 if (questions[currentQuestion].checkAnswer(answer: answer)) {
                     amountPoints += 1
@@ -77,13 +77,23 @@ struct GameView: View {
                 if (currentQuestion < wishedAmountQuestions - 1) {
                     currentQuestion += 1
                     print("current is \(currentQuestion), and count is \(questions.count)")
+                    print(String(questions[currentQuestion].firstNumber))
                 } else {
                     onGameEnd(amountPoints)
                     questions = []
                 }
-                
+            }.onAppear{generateQuestions()}
+            Spacer()
+            HStack {
+                NumberPicture(picture: questions.isEmpty ? 1 : questions[currentQuestion].firstNumber)
+                Image("11").resizable().frame(width: 55, height: 55)
+                NumberPicture(picture: questions.isEmpty ? 1 : questions[currentQuestion].secondNumber)
             }
-        }.onAppear{generateQuestions()}
+
+            TextField("Answer", value: $answer, format: .number).multilineTextAlignment(.center).font(.title)
+            Spacer()
+            Spacer()
+        }
     }
     
     struct Question {
@@ -109,6 +119,16 @@ struct GameView: View {
     func generateQuestions() {
         for _ in 0..<wishedAmountQuestions {
             questions.append(Question(level: wishedLevel))
+        }
+    }
+    
+    struct NumberPicture: View {
+        var picture: Int
+        var body: some View {
+            Image(String(picture))
+                .resizable()
+                .frame(width: 100.0, height: 150.0)
+                .shadow(radius: 5)
         }
     }
 }
