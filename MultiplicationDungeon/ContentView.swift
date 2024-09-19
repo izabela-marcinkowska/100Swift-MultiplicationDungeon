@@ -59,6 +59,7 @@ struct GameView: View {
 
     var body: some View {
         VStack {
+            Spacer()
             HStack {
                 NumberPicture(picture: questions.isEmpty ? 1 : questions[currentQuestion].firstNumber)
                 Image("11")
@@ -66,17 +67,21 @@ struct GameView: View {
                     .frame(width: 45, height: 40)
                 NumberPicture(picture: questions.isEmpty ? 1 : questions[currentQuestion].secondNumber)
             }
+
             Text("My answer is ...")
-                .font(.headline)
                 .padding()
+                .font(.custom(
+                        "Chalkduster",
+                        fixedSize: 36))
             TextField("Answer", text: $answerText)
                 .multilineTextAlignment(.center)
                 .font(.largeTitle)
+                .italic()
                 .keyboardType(.numbersAndPunctuation)
                 .submitLabel(.done) // This shows "Done" on the return key
                 .onSubmit {
-                    submitAnswer()
                     showAnswerAlert = true
+                    submitAnswer()
                 }
             Spacer()
         }
@@ -84,7 +89,17 @@ struct GameView: View {
         .onAppear {
             generateQuestions()
         }.alert(isAnswerCorrect ? "Correct!" : "Better luck next time!", isPresented: $showAnswerAlert) {
-            Button("OK", role: .cancel) {}
+            Button("OK") {
+                if currentQuestion < wishedAmountQuestions - 1 {
+                    currentQuestion += 1
+                    print("Current question is \(currentQuestion), total questions \(questions.count)")
+                    
+                    answerText = "" // Reset the answer field
+                } else {
+                    onGameEnd(amountPoints)
+                    questions = []
+                }
+            }
         }
     }
 
@@ -121,14 +136,8 @@ struct GameView: View {
             isAnswerCorrect = false
         }
         print("Amount points is \(amountPoints)")
-        if currentQuestion < wishedAmountQuestions - 1 {
-            currentQuestion += 1
-            print("Current question is \(currentQuestion), total questions \(questions.count)")
-            answerText = "" // Reset the answer field
-        } else {
-            onGameEnd(amountPoints)
-            questions = []
-        }
+        showAnswerAlert = true
+        // Do not change `currentQuestion` or call `onGameEnd` here
     }
 
     struct NumberPicture: View {
