@@ -54,6 +54,8 @@ struct GameView: View {
     @State private var answerText = ""
     @State private var amountPoints = 0
     @State private var questions = [Question]()
+    @State private var isAnswerCorrect = true
+    @State private var showAnswerAlert = false
 
     var body: some View {
         VStack {
@@ -74,12 +76,15 @@ struct GameView: View {
                 .submitLabel(.done) // This shows "Done" on the return key
                 .onSubmit {
                     submitAnswer()
+                    showAnswerAlert = true
                 }
             Spacer()
         }
         .padding()
         .onAppear {
             generateQuestions()
+        }.alert(isAnswerCorrect ? "Correct!" : "Better luck next time!", isPresented: $showAnswerAlert) {
+            Button("OK", role: .cancel) {}
         }
     }
 
@@ -110,8 +115,10 @@ struct GameView: View {
         if questions[currentQuestion].checkAnswer(answer: userAnswer) {
             amountPoints += 1
             print("It's correct")
+            isAnswerCorrect = true
         } else {
             print("It's wrong")
+            isAnswerCorrect = false
         }
         print("Amount points is \(amountPoints)")
         if currentQuestion < wishedAmountQuestions - 1 {
