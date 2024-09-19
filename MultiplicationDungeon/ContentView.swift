@@ -13,24 +13,37 @@ struct ContentView: View {
     @State private var isGameActive = false
     @State private var finalScore = 0
     @State private var showAlert = false
+    @State private var setAmountOfQuestions = false
+    @State private var setLevelSelection = false
     
     var body: some View {
-        VStack {
-            Form {
-                Picker("Amount of questions", selection: $wishedAmountQuestions) {
-                    ForEach(1..<20) { num in
-                        Text("\(num) questions").tag(num)
-                    }
+        VStack (spacing: 100) {
+            HStack{
+                
+            Button ("Questions") {
+                setAmountOfQuestions = true
+            }.sheet(isPresented: $setAmountOfQuestions) {
+                AmountOfQuestions { selectedAmount in
+                    wishedAmountQuestions = selectedAmount // Update state variable
+                    // The sheet is already dismissed inside AmountOfQuestions
                 }
-                Stepper("Table up to \(wishedLevel)", value: $wishedLevel, in: 2...12)
             }
-        }
+            Button("Level") {
+                setLevelSelection = true
+            }
+            .sheet(isPresented: $setLevelSelection) {
+                LevelSelection { selectedLevel in
+                    wishedLevel = selectedLevel
+                }
+            }
+            }
         VStack {
             Button() {
                 isGameActive = true
             } label: {
                 Image("start-game").resizable().frame(width: 300, height: 300)
             }
+        }
         }
         .sheet(isPresented: $isGameActive) {
             GameView(
@@ -156,8 +169,29 @@ struct GameView: View {
 }
 
 struct AmountOfQuestions: View {
+    let onSetAmount: (Int) -> Void // Closure to pass back the selected amount
+
+        @Environment(\.dismiss) var dismiss // Environment variable to dismiss the sheet
+
+        init(onSetAmount: @escaping (Int) -> Void) {
+            self.onSetAmount = onSetAmount
+        }
     var body: some View {
-        
+        Text("This will be amount question window")
+    }
+}
+
+struct LevelSelection: View {
+    let onSetLevel: (Int) -> Void
+
+    @Environment(\.dismiss) var dismiss
+
+    init(onSetLevel: @escaping (Int) -> Void) {
+        self.onSetLevel = onSetLevel
+    }
+
+    var body: some View {
+        Text("This will be amount level window")
     }
 }
 
