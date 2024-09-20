@@ -103,7 +103,7 @@ struct GameView: View {
     let onGameEnd: (Int) -> Void
     
     let backgroundGradient = LinearGradient(
-        colors: [Color.yellow, Color("Green-light")],
+        colors: [Color.yellow, Color.red],
         startPoint: .top, endPoint: .bottom)
     
     @State private var currentQuestion = 0
@@ -207,7 +207,7 @@ struct AmountOfQuestions: View {
     let onSetAmount: (Int) -> Void
     
     let backgroundGradient = LinearGradient(
-        colors: [Color.yellow, Color("Green-light")],
+        colors: [Color.yellow, Color.blue],
         startPoint: .top, endPoint: .bottom)
     
     @Environment(\.dismiss) var dismiss // Environment variable to dismiss the sheet
@@ -305,7 +305,7 @@ struct LevelSelection: View {
     let onSetLevel: (Int) -> Void
     
     let backgroundGradient = LinearGradient(
-        colors: [Color.yellow, Color("Green-light")],
+        colors: [Color.yellow, Color.purple],
         startPoint: .top, endPoint: .bottom)
     
     @Environment(\.dismiss) var dismiss
