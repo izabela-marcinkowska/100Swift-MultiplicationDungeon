@@ -64,7 +64,7 @@ struct ContentView: View {
                     Button() {
                         isGameActive = true
                     } label: {
-                        Image("start-game").resizable().frame(width: 300, height: 300).shadow(color: .black.opacity(0.7), radius: 6)
+                        Image("start-game").resizable().frame(width: 300, height: 300).shadow(color: .black.opacity(0.5), radius: 6)
                     }
                 }
             }
@@ -102,6 +102,10 @@ struct GameView: View {
     let wishedLevel: Int
     let onGameEnd: (Int) -> Void
     
+    let backgroundGradient = LinearGradient(
+        colors: [Color.yellow, Color("Green-light")],
+        startPoint: .top, endPoint: .bottom)
+    
     @State private var currentQuestion = 0
     @State private var answerText = ""
     @State private var amountPoints = 0
@@ -110,46 +114,49 @@ struct GameView: View {
     @State private var showAnswerAlert = false
     
     var body: some View {
-        VStack {
-            Spacer()
-            HStack {
-                NumberPicture(picture: questions.isEmpty ? 1 : questions[currentQuestion].firstNumber)
-                Image("11")
-                    .resizable()
-                    .frame(width: 45, height: 40)
-                NumberPicture(picture: questions.isEmpty ? 1 : questions[currentQuestion].secondNumber)
-            }
-            Text("My answer is...")
-                .padding()
-                .font(.custom(
-                    "Chalkduster",
-                    fixedSize: 36))
-            TextField("Answer", text: $answerText)
-                .multilineTextAlignment(.center)
-                .font(.largeTitle)
-                .italic()
-                .keyboardType(.numbersAndPunctuation)
-                .submitLabel(.done) // This shows "Done" on the return key
-                .onSubmit {
-                    showAnswerAlert = true
-                    submitAnswer()
+        ZStack{
+            backgroundGradient
+            VStack {
+                Spacer()
+                HStack {
+                    NumberPicture(picture: questions.isEmpty ? 1 : questions[currentQuestion].firstNumber)
+                    Image("11")
+                        .resizable()
+                        .frame(width: 45, height: 40)
+                    NumberPicture(picture: questions.isEmpty ? 1 : questions[currentQuestion].secondNumber)
                 }
-            Spacer()
-        }
-        .padding()
-        .onAppear {
-            generateQuestions()
-        }.alert(isAnswerCorrect ? "Correct!" : "Better luck next time!", isPresented: $showAnswerAlert) {
-            Button("OK") {
-                if currentQuestion < wishedAmountQuestions - 1 {
-                    currentQuestion += 1
-                    answerText = ""
-                } else {
-                    onGameEnd(amountPoints)
-                    questions = []
+                Text("My answer is...")
+                    .padding()
+                    .font(.custom(
+                        "Chalkduster",
+                        fixedSize: 36))
+                TextField("Answer", text: $answerText)
+                    .multilineTextAlignment(.center)
+                    .font(.largeTitle)
+                    .italic()
+                    .keyboardType(.numbersAndPunctuation)
+                    .submitLabel(.done) // This shows "Done" on the return key
+                    .onSubmit {
+                        showAnswerAlert = true
+                        submitAnswer()
+                    }
+                Spacer()
+            }
+            .padding()
+            .onAppear {
+                generateQuestions()
+            }.alert(isAnswerCorrect ? "Correct!" : "Better luck next time!", isPresented: $showAnswerAlert) {
+                Button("OK") {
+                    if currentQuestion < wishedAmountQuestions - 1 {
+                        currentQuestion += 1
+                        answerText = ""
+                    } else {
+                        onGameEnd(amountPoints)
+                        questions = []
+                    }
                 }
             }
-        }
+        }.ignoresSafeArea()
     }
     
     struct Question {
@@ -198,81 +205,88 @@ struct GameView: View {
 
 struct AmountOfQuestions: View {
     let onSetAmount: (Int) -> Void
+    
+    let backgroundGradient = LinearGradient(
+        colors: [Color.yellow, Color("Green-light")],
+        startPoint: .top, endPoint: .bottom)
+    
     @Environment(\.dismiss) var dismiss // Environment variable to dismiss the sheet
     
     init(onSetAmount: @escaping (Int) -> Void) {
         self.onSetAmount = onSetAmount
     }
     var body: some View {
-        VStack(spacing: 40){
-            
-            Text("Amount questions I want to answer is:")
-                .padding()
-                .multilineTextAlignment(.center)
-                .font(.custom(
-                    "Chalkduster",
-                    fixedSize: 32))
-            HStack(spacing: 40){
-                Button () {
-                    onSetAmount(1)
-                    dismiss()
-                } label: {
-                    NumberPicture(picture: 1)
+        ZStack {
+            backgroundGradient
+            VStack(spacing: 40){
+                Text("Amount questions I want to answer is:")
+                    .padding()
+                    .multilineTextAlignment(.center)
+                    .font(.custom(
+                        "Chalkduster",
+                        fixedSize: 32))
+                HStack(spacing: 40){
+                    Button () {
+                        onSetAmount(1)
+                        dismiss()
+                    } label: {
+                        NumberPicture(picture: 1)
+                    }
+                    Button () {
+                        onSetAmount(2)
+                        dismiss()
+                    } label: {
+                        NumberPicture(picture: 2)
+                    }
+                    Button () {
+                        onSetAmount(3)
+                        dismiss()
+                    } label: {
+                        NumberPicture(picture: 3)
+                    }
                 }
-                Button () {
-                    onSetAmount(2)
-                    dismiss()
-                } label: {
-                    NumberPicture(picture: 2)
+                HStack(spacing: 40){
+                    Button () {
+                        onSetAmount(4)
+                        dismiss()
+                    } label: {
+                        NumberPicture(picture: 4)
+                    }
+                    Button () {
+                        onSetAmount(5)
+                        dismiss()
+                    } label: {
+                        NumberPicture(picture: 5)
+                    }
+                    Button () {
+                        onSetAmount(6)
+                        dismiss()
+                    } label: {
+                        NumberPicture(picture: 6)
+                    }
                 }
-                Button () {
-                    onSetAmount(3)
-                    dismiss()
-                } label: {
-                    NumberPicture(picture: 3)
+                HStack(spacing: 40){
+                    Button () {
+                        onSetAmount(7)
+                        dismiss()
+                    } label: {
+                        NumberPicture(picture: 7)
+                    }
+                    Button () {
+                        onSetAmount(8)
+                        dismiss()
+                    } label: {
+                        NumberPicture(picture: 8)
+                    }
+                    Button () {
+                        onSetAmount(9)
+                        dismiss()
+                    } label: {
+                        NumberPicture(picture: 9)
+                    }
                 }
             }
-            HStack(spacing: 40){
-                Button () {
-                    onSetAmount(4)
-                    dismiss()
-                } label: {
-                    NumberPicture(picture: 4)
-                }
-                Button () {
-                    onSetAmount(5)
-                    dismiss()
-                } label: {
-                    NumberPicture(picture: 5)
-                }
-                Button () {
-                    onSetAmount(6)
-                    dismiss()
-                } label: {
-                    NumberPicture(picture: 6)
-                }
-            }
-            HStack(spacing: 40){
-                Button () {
-                    onSetAmount(7)
-                    dismiss()
-                } label: {
-                    NumberPicture(picture: 7)
-                }
-                Button () {
-                    onSetAmount(8)
-                    dismiss()
-                } label: {
-                    NumberPicture(picture: 8)
-                }
-                Button () {
-                    onSetAmount(9)
-                    dismiss()
-                } label: {
-                    NumberPicture(picture: 9)
-                }
-            }
-        }
+        }.ignoresSafeArea()
     }
     
     struct NumberPicture: View {
@@ -284,10 +298,15 @@ struct AmountOfQuestions: View {
                 .shadow(radius: 5)
         }
     }
+        
 }
 
 struct LevelSelection: View {
     let onSetLevel: (Int) -> Void
+    
+    let backgroundGradient = LinearGradient(
+        colors: [Color.yellow, Color("Green-light")],
+        startPoint: .top, endPoint: .bottom)
     
     @Environment(\.dismiss) var dismiss
     
@@ -296,74 +315,77 @@ struct LevelSelection: View {
     }
     
     var body: some View {
-        VStack(spacing: 40) {
-            Text("Table I want to answer is up to:")
-                .padding()
-                .multilineTextAlignment(.center)
-                .font(.custom(
-                    "Chalkduster",
-                    fixedSize: 32))
-            HStack(spacing: 40){
-                Button () {
-                    onSetLevel(1)
-                    dismiss()
-                } label: {
-                    NumberPicture(picture: 1)
+        ZStack{
+            backgroundGradient
+            VStack(spacing: 40) {
+                Text("Table I want to answer is up to:")
+                    .padding()
+                    .multilineTextAlignment(.center)
+                    .font(.custom(
+                        "Chalkduster",
+                        fixedSize: 32))
+                HStack(spacing: 40){
+                    Button () {
+                        onSetLevel(1)
+                        dismiss()
+                    } label: {
+                        NumberPicture(picture: 1)
+                    }
+                    Button () {
+                        onSetLevel(2)
+                        dismiss()
+                    } label: {
+                        NumberPicture(picture: 2)
+                    }
+                    Button () {
+                        onSetLevel(3)
+                        dismiss()
+                    } label: {
+                        NumberPicture(picture: 3)
+                    }
                 }
-                Button () {
-                    onSetLevel(2)
-                    dismiss()
-                } label: {
-                    NumberPicture(picture: 2)
+                HStack(spacing: 40){
+                    Button () {
+                        onSetLevel(4)
+                        dismiss()
+                    } label: {
+                        NumberPicture(picture: 4)
+                    }
+                    Button () {
+                        onSetLevel(5)
+                        dismiss()
+                    } label: {
+                        NumberPicture(picture: 5)
+                    }
+                    Button () {
+                        onSetLevel(6)
+                        dismiss()
+                    } label: {
+                        NumberPicture(picture: 6)
+                    }
                 }
-                Button () {
-                    onSetLevel(3)
-                    dismiss()
-                } label: {
-                    NumberPicture(picture: 3)
+                HStack(spacing: 40){
+                    Button () {
+                        onSetLevel(7)
+                        dismiss()
+                    } label: {
+                        NumberPicture(picture: 7)
+                    }
+                    Button () {
+                        onSetLevel(8)
+                        dismiss()
+                    } label: {
+                        NumberPicture(picture: 8)
+                    }
+                    Button () {
+                        onSetLevel(9)
+                        dismiss()
+                    } label: {
+                        NumberPicture(picture: 9)
+                    }
                 }
             }
-            HStack(spacing: 40){
-                Button () {
-                    onSetLevel(4)
-                    dismiss()
-                } label: {
-                    NumberPicture(picture: 4)
-                }
-                Button () {
-                    onSetLevel(5)
-                    dismiss()
-                } label: {
-                    NumberPicture(picture: 5)
-                }
-                Button () {
-                    onSetLevel(6)
-                    dismiss()
-                } label: {
-                    NumberPicture(picture: 6)
-                }
-            }
-            HStack(spacing: 40){
-                Button () {
-                    onSetLevel(7)
-                    dismiss()
-                } label: {
-                    NumberPicture(picture: 7)
-                }
-                Button () {
-                    onSetLevel(8)
-                    dismiss()
-                } label: {
-                    NumberPicture(picture: 8)
-                }
-                Button () {
-                    onSetLevel(9)
-                    dismiss()
-                } label: {
-                    NumberPicture(picture: 9)
-                }
-            }
-        }
+        }.ignoresSafeArea()
     }
     
     struct NumberPicture: View {
