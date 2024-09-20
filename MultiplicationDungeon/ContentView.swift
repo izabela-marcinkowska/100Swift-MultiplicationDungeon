@@ -17,67 +17,74 @@ struct ContentView: View {
     @State private var setLevelSelection = false
     
     var body: some View {
-        VStack (spacing: 120) {
-            HStack{
-                VStack{
-                    Text("Questions")
-                        .padding()
-                        .multilineTextAlignment(.center)
-                        .font(.custom(
-                            "Chalkduster",
-                            fixedSize: 28))
-                    Button () {
-                        setAmountOfQuestions = true
-                    } label: {
-                        NumberPicture(picture: wishedAmountQuestions)
-                    }.sheet(isPresented: $setAmountOfQuestions) {
-                        AmountOfQuestions { selectedAmount in
-                            wishedAmountQuestions = selectedAmount
+        let backgroundGradient = LinearGradient(
+            colors: [Color.yellow, Color("Green-light")],
+            startPoint: .top, endPoint: .bottom)
+        ZStack{
+            backgroundGradient
+            VStack (spacing: 120) {
+                HStack{
+                    VStack{
+                        Text("Questions")
+                            .padding()
+                            .multilineTextAlignment(.center)
+                            .font(.custom(
+                                "Chalkduster",
+                                fixedSize: 28))
+                        Button () {
+                            setAmountOfQuestions = true
+                        } label: {
+                            NumberPicture(picture: wishedAmountQuestions)
+                        }.sheet(isPresented: $setAmountOfQuestions) {
+                            AmountOfQuestions { selectedAmount in
+                                wishedAmountQuestions = selectedAmount
+                            }
                         }
-                    }
-                }.frame(width: 190, height: 190)
-                VStack{
-                    Text("Level")
-                        .padding()
-                        .multilineTextAlignment(.center)
-                        .font(.custom(
-                            "Chalkduster",
-                            fixedSize: 28))
+                    }.frame(width: 190, height: 190)
+                    VStack{
+                        Text("Level")
+                            .padding()
+                            .multilineTextAlignment(.center)
+                            .font(.custom(
+                                "Chalkduster",
+                                fixedSize: 28))
+                        Button() {
+                            setLevelSelection = true
+                        } label: {
+                            NumberPicture(picture: wishedLevel)
+                        }
+                        .sheet(isPresented: $setLevelSelection) {
+                            LevelSelection { selectedLevel in
+                                wishedLevel = selectedLevel
+                            }
+                        }
+                    }.frame(width: 180, height: 180)
+                }
+                VStack {
                     Button() {
-                        setLevelSelection = true
+                        isGameActive = true
                     } label: {
-                        NumberPicture(picture: wishedLevel)
+                        Image("start-game").resizable().frame(width: 300, height: 300).shadow(color: .black.opacity(0.7), radius: 6)
                     }
-                    .sheet(isPresented: $setLevelSelection) {
-                        LevelSelection { selectedLevel in
-                            wishedLevel = selectedLevel
-                        }
-                    }
-                }.frame(width: 180, height: 180)
-            }
-            VStack {
-                Button() {
-                    isGameActive = true
-                } label: {
-                    Image("start-game").resizable().frame(width: 300, height: 300)
                 }
             }
-        }
-        .sheet(isPresented: $isGameActive) {
-            GameView(
-                wishedAmountQuestions: wishedAmountQuestions,
-                wishedLevel: wishedLevel,
-                onGameEnd: { score in
-                    finalScore = score
-                    isGameActive = false
-                    showAlert = true
-                }
-            )
-        }
-        .alert("Game Over! Your score is \(finalScore)", isPresented: $showAlert) {
-            Button("OK", role: .cancel) {}
-        }
+            .sheet(isPresented: $isGameActive) {
+                GameView(
+                    wishedAmountQuestions: wishedAmountQuestions,
+                    wishedLevel: wishedLevel,
+                    onGameEnd: { score in
+                        finalScore = score
+                        isGameActive = false
+                        showAlert = true
+                    }
+                )
+            }
+            .alert("Game Over! Your score is \(finalScore)", isPresented: $showAlert) {
+                Button("OK", role: .cancel) {}
+            }
+        }.ignoresSafeArea()
     }
+    
     struct NumberPicture: View {
         var picture: Int
         var body: some View {
@@ -87,6 +94,7 @@ struct ContentView: View {
                 .shadow(radius: 5)
         }
     }
+    
 }
 
 struct GameView: View {
