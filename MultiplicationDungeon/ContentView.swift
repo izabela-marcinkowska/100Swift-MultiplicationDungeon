@@ -85,17 +85,11 @@ struct ContentView: View {
         }.ignoresSafeArea()
     }
     
-    struct NumberPicture: View {
-        var picture: Int
-        var body: some View {
-            Image("\(picture)")
-                .resizable()
-                .frame(width: 100.0, height: 150.0)
-                .shadow(radius: 5)
-        }
-    }
+    
     
 }
+
+
 
 struct GameView: View {
     let wishedAmountQuestions: Int
@@ -110,16 +104,27 @@ struct GameView: View {
     @State private var answerText = ""
     @State private var amountPoints = 0
     @State private var questions = [Question]()
-    @State private var isAnswerCorrect = true
-    @State private var showAnswerAlert = false
+    @State private var isAnswerCorrect: Bool? = nil
+    
+    @State private var userGotPoint = false
+    
     
     var body: some View {
         ZStack{
             backgroundGradient.ignoresSafeArea()
             VStack {
-                Text("You have \(amountPoints) points").font(.custom(
-                    "Chalkduster",
-                    fixedSize: 36))
+                
+                VStack {
+                    Text("You have \(amountPoints) points").font(.custom(
+                        "Chalkduster",
+                        fixedSize: 36))
+                    if let isCorrect = isAnswerCorrect {
+                        Text(isCorrect ? "Correct!" : "Incorrect")
+                            .font(.headline)
+                            .foregroundColor(isCorrect ? .green : .red)
+                            .transition(.opacity)
+                    }
+                }
                 Spacer()
                 HStack {
                     NumberPicture(picture: questions.isEmpty ? 1 : questions[currentQuestion].firstNumber)
@@ -128,55 +133,31 @@ struct GameView: View {
                         .frame(width: 45, height: 40)
                     NumberPicture(picture: questions.isEmpty ? 1 : questions[currentQuestion].secondNumber)
                 }
-                Text("My answer is...")
-                    .padding()
-                    .font(.custom(
-                        "Chalkduster",
-                        fixedSize: 36))
-                TextField("Answer", text: $answerText)
-                    .multilineTextAlignment(.center)
-                    .font(.largeTitle)
-                    .italic()
-                    .keyboardType(.numbersAndPunctuation)
-                    .submitLabel(.done) // This shows "Done" on the return key
-                    .onSubmit {
-                        showAnswerAlert = true
-                        submitAnswer()
-                    }
-                Spacer()
-                Spacer()
-            }
-            .padding()
-            .onAppear {
-                generateQuestions()
-            }.alert(isAnswerCorrect ? "Correct!" : "Better luck next time!", isPresented: $showAnswerAlert) {
-                Button("OK") {
-                    if currentQuestion < wishedAmountQuestions - 1 {
-                        currentQuestion += 1
-                        answerText = ""
-                    } else {
-                        onGameEnd(amountPoints)
-                        questions = []
-                    }
+                VStack {
+                    
+                    Text("My answer is...")
+                        .padding()
+                        .font(.custom(
+                            "Chalkduster",
+                            fixedSize: 36))
+                    TextField("Answer", text: $answerText)
+                        .multilineTextAlignment(.center)
+                        .font(.largeTitle)
+                        .italic()
+                        .keyboardType(.numbersAndPunctuation)
+                        .submitLabel(.done) // This shows "Done" on the return key
+                        .onSubmit {
+                            submitAnswer()
+                        }
                 }
+                Spacer()
             }
         }
-    }
-    
-    struct Question {
-        let firstNumber: Int
-        let secondNumber: Int
-        let correctAnswer: Int
-        
-        init(level: Int) {
-            self.firstNumber = Int.random(in: 1...level)
-            self.secondNumber = Int.random(in: 1...level)
-            self.correctAnswer = firstNumber * secondNumber
+        .onAppear {
+            generateQuestions()
         }
         
-        func checkAnswer(answer: Int) -> Bool {
-            return answer == correctAnswer
-        }
+        
     }
     
     func generateQuestions() {
@@ -186,24 +167,47 @@ struct GameView: View {
     }
     
     func submitAnswer() {
-        let userAnswer = Int(answerText) ?? 0
-        if questions[currentQuestion].checkAnswer(answer: userAnswer) {
+        guard let answerInt = Int(answerText) else {
+            print("Please enter a valid number.")
+            return
+        }
+        
+        if questions[currentQuestion].checkAnswer(answer: answerInt) {
             amountPoints += 1
             isAnswerCorrect = true
         } else {
             isAnswerCorrect = false
         }
-        showAnswerAlert = true
+        if currentQuestion < wishedAmountQuestions - 1 {
+            // Move to the next question after a short delay
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                currentQuestion += 1
+                answerText = ""
+                isAnswerCorrect = nil // Reset feedback
+            }
+        } else {
+            // End the game after a short delay
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                onGameEnd(amountPoints)
+            }
+        }
+        
+    }
+}
+
+struct Question {
+    let firstNumber: Int
+    let secondNumber: Int
+    let correctAnswer: Int
+    
+    init(level: Int) {
+        self.firstNumber = Int.random(in: 1...level)
+        self.secondNumber = Int.random(in: 1...level)
+        self.correctAnswer = firstNumber * secondNumber
     }
     
-    struct NumberPicture: View {
-        var picture: Int
-        var body: some View {
-            Image("\(picture)")
-                .resizable()
-                .frame(width: 100.0, height: 150.0)
-                .shadow(radius: 5)
-        }
+    func checkAnswer(answer: Int) -> Bool {
+        return answer == correctAnswer
     }
 }
 
@@ -293,16 +297,8 @@ struct AmountOfQuestions: View {
         }.ignoresSafeArea()
     }
     
-    struct NumberPicture: View {
-        var picture: Int
-        var body: some View {
-            Image("\(picture)")
-                .resizable()
-                .frame(width: 100.0, height: 150.0)
-                .shadow(radius: 5)
-        }
-    }
-        
+    
+    
 }
 
 struct LevelSelection: View {
@@ -392,14 +388,16 @@ struct LevelSelection: View {
         }.ignoresSafeArea()
     }
     
-    struct NumberPicture: View {
-        var picture: Int
-        var body: some View {
-            Image("\(picture)")
-                .resizable()
-                .frame(width: 100.0, height: 150.0)
-                .shadow(radius: 5)
-        }
+    
+}
+
+struct NumberPicture: View {
+    var picture: Int
+    var body: some View {
+        Image("\(picture)")
+            .resizable()
+            .frame(width: 100.0, height: 150.0)
+            .shadow(radius: 5)
     }
 }
 
