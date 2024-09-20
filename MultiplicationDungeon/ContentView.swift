@@ -115,8 +115,11 @@ struct GameView: View {
     
     var body: some View {
         ZStack{
-            backgroundGradient
+            backgroundGradient.ignoresSafeArea()
             VStack {
+                Text("You have \(amountPoints) points").font(.custom(
+                    "Chalkduster",
+                    fixedSize: 36))
                 Spacer()
                 HStack {
                     NumberPicture(picture: questions.isEmpty ? 1 : questions[currentQuestion].firstNumber)
@@ -141,6 +144,7 @@ struct GameView: View {
                         submitAnswer()
                     }
                 Spacer()
+                Spacer()
             }
             .padding()
             .onAppear {
@@ -156,7 +160,7 @@ struct GameView: View {
                     }
                 }
             }
-        }.ignoresSafeArea()
+        }
     }
     
     struct Question {
