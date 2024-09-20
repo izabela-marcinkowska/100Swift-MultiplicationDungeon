@@ -117,10 +117,12 @@ struct GameView: View {
                 VStack {
                     Text("You have \(amountPoints) points").font(.custom(
                         "Chalkduster",
-                        fixedSize: 36))
+                        fixedSize: 36)).padding(.top, 20)
                     if let isCorrect = isAnswerCorrect {
                         Text(isCorrect ? "Correct!" : "Incorrect")
-                            .font(.headline)
+                            .font(.custom(
+                                "Chalkduster",
+                                fixedSize: 30))
                             .foregroundColor(isCorrect ? .green : .red)
                             .transition(.opacity)
                     }
