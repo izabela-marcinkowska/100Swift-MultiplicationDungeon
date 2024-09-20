@@ -84,9 +84,6 @@ struct ContentView: View {
             }
         }.ignoresSafeArea()
     }
-    
-    
-    
 }
 
 
@@ -105,15 +102,12 @@ struct GameView: View {
     @State private var amountPoints = 0
     @State private var questions = [Question]()
     @State private var isAnswerCorrect: Bool? = nil
-    
     @State private var userGotPoint = false
-    
     
     var body: some View {
         ZStack{
             backgroundGradient.ignoresSafeArea()
             VStack {
-                
                 VStack {
                     Text("You have \(amountPoints) points").font(.custom(
                         "Chalkduster",
@@ -124,7 +118,6 @@ struct GameView: View {
                                 "Chalkduster",
                                 fixedSize: 30))
                             .foregroundColor(isCorrect ? .green : .red)
-                            .transition(.opacity)
                     }
                 }
                 Spacer()
@@ -158,8 +151,6 @@ struct GameView: View {
         .onAppear {
             generateQuestions()
         }
-        
-        
     }
     
     func generateQuestions() {
@@ -173,7 +164,6 @@ struct GameView: View {
             print("Please enter a valid number.")
             return
         }
-        
         if questions[currentQuestion].checkAnswer(answer: answerInt) {
             amountPoints += 1
             isAnswerCorrect = true
@@ -193,7 +183,6 @@ struct GameView: View {
                 onGameEnd(amountPoints)
             }
         }
-        
     }
 }
 
@@ -225,6 +214,7 @@ struct AmountOfQuestions: View {
     init(onSetAmount: @escaping (Int) -> Void) {
         self.onSetAmount = onSetAmount
     }
+    
     var body: some View {
         ZStack {
             backgroundGradient
@@ -388,9 +378,7 @@ struct LevelSelection: View {
                 }
             }
         }.ignoresSafeArea()
-    }
-    
-    
+    } 
 }
 
 struct NumberPicture: View {
